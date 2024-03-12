@@ -1,21 +1,25 @@
-import { createConfig } from "@ponder/core";
+import { createConfig, loadBalance } from "@ponder/core";
 import { http } from "viem";
 
-import { ExampleContractAbi } from "./abis/ExampleContractAbi";
+import { AraLockerAbi } from "./abis/locker-abi";
+import { metis } from "viem/chains";
 
 export default createConfig({
   networks: {
-    mainnet: {
-      chainId: 1,
-      transport: http(process.env.PONDER_RPC_URL_1),
+    metis: {
+      chainId: metis.id,
+      transport: loadBalance([
+        http("https://metis-pokt.nodies.app"),
+        http("https://andromeda.metis.io/?owner=1088"),
+      ]),
     },
   },
   contracts: {
-    ExampleContract: {
-      network: "mainnet",
-      abi: ExampleContractAbi,
-      address: "0x0",
-      startBlock: 1234567,
+    AraLocker: {
+      network: "metis",
+      abi: AraLockerAbi,
+      address: "0x3e12935B0005f7159780d2700A30FE8041163d00",
+      startBlock: 10290664,
     },
   },
 });
